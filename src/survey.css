@@ -159,7 +159,7 @@ div.s-answer {
 .s-answer > table > thead th {
   min-height: 3em;
   height: auto;
-  background-color: var(--light);
+  background-color: #D8E8CC; /* 척도 헤더는 본문보다 약간 진하게 */
   font-weight: normal;
   font-size: 82%;
   color: #2d2d2d;
@@ -177,7 +177,7 @@ div.s-answer {
 }
 /* 문항 본문 */
 td.answer-td {
-  font-size: 9pt;
+  font-size: 10pt;
 }
 td.td-radio {
   padding: 7px 0 !important;
