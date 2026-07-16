@@ -159,11 +159,18 @@ div.s-answer {
 .s-answer > table > thead th {
   min-height: 3em;
   height: auto;
-  background-color: #D8E8CC; /* 척도 헤더는 본문보다 약간 진하게 */
-  font-weight: normal;
-  font-size: 82%;
+  background-color: #EDF5E6;
+  font-weight: bold;
+  font-size: 92%;
   color: #2d2d2d;
 }
+/* 척도 헤더: 왼쪽→오른쪽으로 점점 진하게 */
+.s-answer > table > thead th:nth-child(2) { background-color: #EDF5E6; }
+.s-answer > table > thead th:nth-child(3) { background-color: #E3EFD8; }
+.s-answer > table > thead th:nth-child(4) { background-color: #D9E9CA; }
+.s-answer > table > thead th:nth-child(5) { background-color: #CFE3BC; }
+.s-answer > table > thead th:nth-child(6) { background-color: #C5DDAE; }
+.s-answer > table > thead th:nth-child(7) { background-color: #BBD7A0; }
 .s-answer > table th {
   border: 1px solid var(--border-strong) !important;
   padding: 0.5em !important;
