@@ -320,9 +320,7 @@ function AnswerSheet({ answers }) {
             <tbody>
               {questions.map((q) => (
                 <tr key={q.id}>
-                  <td>
-                    <b>{q.no}.</b> {q.question}
-                  </td>
+                  <td className="answer-td">{q.question}</td>
                   {data.scale.map((s) => (
                     <td key={s.value} className="td-radio text-center">
                       <label>
