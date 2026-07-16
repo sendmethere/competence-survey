@@ -12,6 +12,7 @@ import {
   scoreSubmission,
   fmtDate,
   fmt,
+  scaleLines,
 } from './scores.js'
 
 /* ---------- SVG 차트들 ---------- */
@@ -303,9 +304,16 @@ function AnswerSheet({ answers }) {
           <table>
             <thead>
               <tr>
-                <th style={{ width: '46%' }}></th>
+                <th style={{ width: '60%' }}></th>
                 {data.scale.map((s) => (
-                  <th key={s.value}>{s.label}</th>
+                  <th key={s.value}>
+                    {scaleLines(s.label).map((line, i) => (
+                      <span key={i}>
+                        {i > 0 && <br />}
+                        {line}
+                      </span>
+                    ))}
+                  </th>
                 ))}
               </tr>
             </thead>

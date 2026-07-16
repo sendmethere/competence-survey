@@ -58,3 +58,6 @@ export function fmtDate(iso) {
 }
 
 export const fmt = (v) => (v == null ? '-' : v.toFixed(1))
+
+// 척도 라벨을 어절 단위 줄바꿈으로 (전혀/그렇지/않다, 보통/이다 등)
+export const scaleLines = (label) => (label === '보통이다' ? ['보통', '이다'] : label.split(' '))

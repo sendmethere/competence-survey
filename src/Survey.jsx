@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import data from '../questions.json'
 import { saveSubmission } from './storage.js'
+import { scaleLines } from './scores.js'
 
 // 원본 설문과 동일한 페이지 구성 (p1: 1~7, p2: 8~15, p3: 16~21)
 const PAGES = [
@@ -115,9 +116,16 @@ export default function Survey() {
           <table>
             <thead>
               <tr>
-                <th style={{ width: '46%' }}></th>
+                <th style={{ width: '60%' }}></th>
                 {data.scale.map((s) => (
-                  <th key={s.value}>{s.label}</th>
+                  <th key={s.value}>
+                    {scaleLines(s.label).map((line, i) => (
+                      <span key={i}>
+                        {i > 0 && <br />}
+                        {line}
+                      </span>
+                    ))}
+                  </th>
                 ))}
               </tr>
             </thead>
