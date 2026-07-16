@@ -155,6 +155,138 @@ function CompareChart({ mine }) {
   )
 }
 
+/* ---------- 해석 가이드 ---------- */
+
+const LEVEL_BANDS = [
+  { min: 4.5, name: '선도 단계', text: 'AI·디지털 교육역량 전반이 매우 높은 수준입니다. 자신의 실천을 동료 교사와 공유하고, 학교·지역 단위의 확산을 이끄는 역할을 고려해 볼 수 있습니다.' },
+  { min: 4.0, name: '실천 단계', text: '대부분의 역량을 수업 현장에서 안정적으로 실천하고 있는 수준입니다. 강점 역량을 심화하면서, 상대적으로 낮은 역량을 실천 경험과 연결해 끌어올리는 것이 효과적입니다.' },
+  { min: 3.0, name: '성장 단계', text: '기본적인 이해를 갖추고 실천을 넓혀가는 단계입니다. 이해한 내용을 한 단원, 한 차시의 수업 실천으로 옮기는 작은 시도가 성장의 핵심 지점입니다.' },
+  { min: 2.0, name: '탐색 단계', text: 'AI·디지털 기반 교육을 탐색하기 시작한 단계입니다. 개념과 사례를 접할 수 있는 기초 연수와 동료의 수업 참관에서 출발하는 것을 권합니다.' },
+  { min: 0, name: '시작 단계', text: 'AI·디지털 기반 교육과의 접점을 만들어가는 시기입니다. 부담 없는 도구 하나를 정해 일상 업무부터 활용해 보며 감각을 익히는 것이 좋습니다.' },
+]
+
+// 이해→활용→성찰 중 가장 낮은 단계에 대한 처방
+const STAGE_ADVICE = {
+  이해: '개념·원리에 대한 이해가 상대적으로 낮습니다. 연수 자료나 우수 사례를 통해 "왜, 무엇을" 하는지 정리하는 것이 우선입니다.',
+  활용: '알고 있는 것을 수업 실천으로 옮기는 단계가 상대적으로 낮습니다. 작은 범위(한 차시, 한 활동)부터 도구를 직접 적용해 보세요.',
+  '성찰(개선)': '실천 이후 되돌아보는 성찰 단계가 상대적으로 낮습니다. 수업 데이터와 기록을 남기고, 결과를 다음 수업 개선으로 연결하는 루틴을 만들어 보세요.',
+}
+
+// 최저 역량별 성장 제안
+const COMP_GROWTH = {
+  A: 'AI·디지털 기반 교육의 방향과 교사 역할 변화에 대한 문헌·연수로 관점을 정리해 보세요.',
+  B: '디지털 교육 규범, 저작권, 학습데이터 보호를 실제 수업 상황에 적용하는 사례 학습을 권합니다.',
+  C: '우리 반 학습 데이터를 작은 범위에서 직접 분석·시각화해 보는 시도가 도움이 됩니다.',
+  D: '성취기준-수업-평가를 연결하는 설계(백워드 설계 등)를 한 단원에 적용해 보세요.',
+  E: '실시간 응답·협력 도구를 활용한 학생 참여형 활동을 한 차시부터 실행해 보세요.',
+  F: 'AI·디지털 도구 기반 과정중심평가 루브릭을 설계하고 소규모로 적용해 보는 것을 권합니다.',
+  G: '학습공동체 참여, 실천 기록·공유를 통해 자신만의 전문성 개발 경로를 구축해 보세요.',
+}
+
+function topComment(top, allEqual) {
+  if (allEqual) return null
+  if (top.mean >= 4.5)
+    return `상위 역량(${fmt(top.mean)}점)은 이미 선도적인 수준입니다. 이 역량을 중심으로 수업 사례를 만들어 동료와 공유하거나 학습공동체에서 확산하는 역할을 해볼 수 있습니다.`
+  if (top.mean >= 4.0)
+    return `상위 역량(${fmt(top.mean)}점)은 안정적인 강점입니다. 이 강점을 다른 역량의 실천과 연결하면(예: 강점 도구를 낮은 역량 영역 수업에 활용) 전체 역량이 함께 성장합니다.`
+  return `상위 역량(${fmt(top.mean)}점)도 아직 성장 여지가 있습니다. 상대적 강점에서 출발해 성공 경험을 쌓는 것이 전체 역량 향상의 지렛대가 됩니다.`
+}
+
+function bottomComment(bottom, top, allEqual) {
+  if (allEqual) return null
+  const gap = (top.mean ?? 0) - (bottom.mean ?? 0)
+  let base
+  if (bottom.mean >= 4.0)
+    base = `하위 역량(${fmt(bottom.mean)}점)도 절대적으로는 높은 수준으로, 역량이 고르게 발달해 있습니다. 심화·확산 중심의 성장을 계획해 보세요.`
+  else if (bottom.mean >= 3.0)
+    base = `하위 역량(${fmt(bottom.mean)}점)이 우선 보완 지점입니다. 관련 연수 수강과 함께, 이 영역의 도구를 수업에 한 번 적용해 보는 것부터 시작하세요.`
+  else
+    base = `하위 역량(${fmt(bottom.mean)}점)은 집중 개발이 필요한 영역입니다. 기초 개념 연수부터 시작해 단계적으로 실천 범위를 넓히는 것을 권합니다.`
+  if (gap >= 1.5) base += ' 역량 간 편차가 큰 편이므로, 하위 역량에 학습 시간을 우선 배분하는 것이 효율적입니다.'
+  else if (gap <= 0.5) base += ' 역량 간 편차가 작아 전반적으로 균형 잡힌 프로필입니다.'
+  return base
+}
+
+function InterpretGuide({ cur, allEqual, topList, bottomList }) {
+  if (cur.overall == null) return null
+  const band = LEVEL_BANDS.find((b) => cur.overall >= b.min)
+
+  // 이해/활용/성찰 단계별 평균
+  const stages = INDICATOR_TYPES.map((t, si) => {
+    const vals = cur.comps.map((c) => c.indicators[si]).filter((v) => v != null)
+    return { name: t.name, mean: vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null }
+  }).filter((s) => s.mean != null)
+  const weakest = stages.length ? stages.reduce((a, b) => (b.mean < a.mean ? b : a)) : null
+  const stageBalanced = stages.length && Math.max(...stages.map((s) => s.mean)) - Math.min(...stages.map((s) => s.mean)) < 0.3
+
+  const top = topList[0]
+  const bottom = bottomList[0]
+
+  return (
+    <div className="dash-panel" style={{ marginBottom: '0.6em' }}>
+      <h4 className="panel-title">
+        해석 가이드 <small className="desc">진단 결과를 바탕으로 현재 지점과 향후 성장 지점을 안내합니다.</small>
+      </h4>
+
+      <div className="guide-card">
+        <div className="guide-head">
+          📍 현재 지점: <b>{band.name}</b> <span className="desc">(종합 {fmt(cur.overall)}점 / 5.0)</span>
+        </div>
+        <p>{band.text}</p>
+      </div>
+
+      <div className="guide-card">
+        <div className="guide-head">🌱 향후 성장 지점</div>
+        <ul>
+          {stageBalanced ? (
+            <li>
+              {stages.map((s) => `${s.name}(${fmt(s.mean)})`).join(' · ')} 단계가 고르게 발달해 있습니다. 현재의
+              균형을 유지하며 실천의 깊이를 더해 가세요.
+            </li>
+          ) : (
+            weakest && (
+              <li>
+                <b>{weakest.name}</b> 단계({fmt(weakest.mean)}점)가 가장 낮습니다. {STAGE_ADVICE[weakest.name]}
+              </li>
+            )
+          )}
+          {!allEqual && bottom && (
+            <li>
+              <b>[{bottom.code}]</b> 역량이 성장의 출발점입니다. {COMP_GROWTH[bottom.code]}
+            </li>
+          )}
+        </ul>
+      </div>
+
+      {allEqual ? (
+        <div className="guide-card">
+          <div className="guide-head">💬 역량 코멘트</div>
+          <p>
+            모든 역량이 {fmt(cur.comps[0].mean)}점으로 동일합니다.{' '}
+            {cur.overall >= 4.5
+              ? '전 역량이 고르게 높은 수준으로, 심화·확산과 동료 지원 역할을 고려해 보세요.'
+              : cur.overall >= 3.0
+                ? '고른 프로필이므로 관심 있는 역량 하나를 골라 깊이를 더하는 전략이 효과적입니다.'
+                : '전 역량을 함께 끌어올릴 수 있도록 기초 연수부터 단계적으로 접근해 보세요.'}
+          </p>
+        </div>
+      ) : (
+        <div className="guide-card">
+          <div className="guide-head">💬 상위·하위 역량 코멘트</div>
+          <ul>
+            <li>
+              <b>상위 [{topList.map((c) => c.code).join(', ')}]</b> — {topComment(top, allEqual)}
+            </li>
+            <li>
+              <b>하위 [{bottomList.map((c) => c.code).join(', ')}]</b> — {bottomComment(bottom, top, allEqual)}
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
+
 /* ---------- 본문 ---------- */
 
 // 원본 설문과 동일한 페이지 구성으로 응답 내용을 읽기 전용 표시
@@ -463,6 +595,9 @@ export default function Analysis() {
             ))}
           </div>
         )}
+
+        {/* 해석 가이드 */}
+        <InterpretGuide cur={cur} allEqual={allEqual} topList={topList} bottomList={bottomList} />
 
         {/* 전체 교사 그룹 비교 */}
         <div className="dash-panel">

@@ -499,6 +499,35 @@ td.mean-cell {
   color: #1a4fa0;
 }
 
+/* 해석 가이드 */
+.guide-card {
+  background: white;
+  border-radius: 0.5em;
+  padding: 0.8em 1em;
+  margin-bottom: 0.6em;
+  line-height: 1.7;
+}
+.guide-card:last-child {
+  margin-bottom: 0;
+}
+.guide-head {
+  font-size: 105%;
+  margin-bottom: 0.3em;
+}
+.guide-head b {
+  color: var(--primary-dark);
+}
+.guide-card p {
+  margin: 0.2em 0;
+}
+.guide-card ul {
+  margin: 0.2em 0;
+  padding-left: 1.3em;
+}
+.guide-card li {
+  margin-bottom: 0.35em;
+}
+
 /* 범례 */
 .legend {
   margin: 0.5em 0;
