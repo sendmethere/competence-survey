@@ -136,6 +136,10 @@ div.qtop-desc {
   margin-bottom: 0.5em;
   line-height: 150%;
 }
+div.qtop-desc {
+  font-size: 93%; /* 약 1pt 축소 */
+  font-weight: bold;
+}
 
 /* 경고문 */
 div.main-warning {
