@@ -152,7 +152,7 @@ export default function Survey() {
             {page < PAGES.length - 1 ? '다음' : '제출'}
           </button>
         </div>
-        <div className="text-center desc">
+        <div className="text-center desc" style={{ marginBottom: '2.5em' }}>
           {page + 1} / {PAGES.length} 페이지
         </div>
       </div>
