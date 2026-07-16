@@ -17,7 +17,7 @@ function QuestionRow({ q, value, warned, onSelect }) {
         {q.question}
         <div style={{ marginTop: 8 }}>
           <span className="more-btn" onClick={() => setOpen(!open)}>
-            {open ? '접기' : '펼치기'}
+            {open ? '접기' : '더보기'}
             <small className="arrow">{open ? '▲' : '▼'}</small>
           </span>
         </div>
